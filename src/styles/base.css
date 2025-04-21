@@ -1,0 +1,23 @@
+/* src/styles/base.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom reusable button styles */
+.btn {
+  @apply inline-flex items-center px-4 py-2 font-medium rounded transition duration-150;
+}
+.btn-primary {
+  @apply bg-primary text-white hover:bg-blue-700;
+}
+.btn-secondary {
+  @apply bg-secondary text-white hover:bg-gray-600;
+}
+.btn-danger {
+  @apply bg-danger text-white hover:bg-red-700;
+}
+
+/* Input styles */
+.form-input {
+  @apply border border-gray-300 px-4 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary;
+}
