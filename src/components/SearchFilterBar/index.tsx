@@ -10,6 +10,7 @@ const formatBudget = (value: number) => {
 
 interface SearchBarProps {
   query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
   onSearch: (filters: {
     location: string;
     propertyType: string;
@@ -21,22 +22,23 @@ interface SearchBarProps {
   suggestions: Property[];
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ query, onSubmit, onSearch, suggestions }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  query,
+  setQuery,
+  onSearch,
+  onSubmit,
+  suggestions,
+}) => {
   const [location, setLocation] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [bhk, setBhk] = useState('');
   const [budgetRange, setBudgetRange] = useState<[number, number]>([0, 100]);
-  const [inputQuery, setInputQuery] = useState(query || '');
 
   const [locationSuggestions, setLocationSuggestions] = useState<Property[]>([]);
   const [titleSuggestions, setTitleSuggestions] = useState<Property[]>([]);
 
   const locationRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setInputQuery(query);
-  }, [query]);
 
   useEffect(() => {
     if (location.trim() === '') {
@@ -50,15 +52,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ query, onSubmit, onSearch, sugges
   }, [location, suggestions]);
 
   useEffect(() => {
-    if (inputQuery.trim() === '') {
+    if (query.trim() === '') {
       setTitleSuggestions([]);
     } else {
       const filtered = suggestions.filter((s) =>
-        s.title.toLowerCase().includes(inputQuery.toLowerCase())
+        s.title.toLowerCase().includes(query.toLowerCase())
       );
       setTitleSuggestions(filtered);
     }
-  }, [inputQuery, suggestions]);
+  }, [query, suggestions]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -176,8 +178,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ query, onSubmit, onSearch, sugges
           <input
             type="text"
             placeholder="Search by title..."
-            value={inputQuery}
-            onChange={(e) => setInputQuery(e.target.value)}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             className="w-full border rounded-md px-3 py-2"
           />
           {titleSuggestions.length > 0 && (
@@ -187,7 +189,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ query, onSubmit, onSearch, sugges
                   key={s.id}
                   className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
                   onClick={() => {
-                    setInputQuery(s.title);
+                    setQuery(s.title);
                     onSubmit(s.title);
                     setTitleSuggestions([]);
                   }}
