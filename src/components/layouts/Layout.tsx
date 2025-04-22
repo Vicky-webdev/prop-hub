@@ -1,15 +1,14 @@
-// src/components/layout/Layout.tsx
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
-import LoginModal from '../auth/LoginModal';
-import RegisterModal from '../auth/RegisterModal';
-import { useAuthModal } from '../../context/AuthModalContext';
-import { UserProvider } from '../../context/UserContext';
-import SearchBar from '../SearchFilterBar';
-import propertyData from '../../data/mockProperties.json';
-import { Property } from '../../types/types';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import LoginModal from "../auth/LoginModal";
+import RegisterModal from "../auth/RegisterModal";
+import Header from "./Header";
+import Footer from "./Footer";
+import SearchBar from "../SearchFilterBar";
+import propertyData from "../../data/mockProperties.json";
+import { useAuthModal } from "../../context/AuthModalContext";
+import { UserProvider } from "../../context/UserContext";
+import { Property } from "../../types/types";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,13 +17,14 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const modalContext = useAuthModal();
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation(); // <-- NEW: detects current route
 
   const [properties, setProperties] = useState<Property[]>([]);
-  const [query, setQuery] = useState<string>('');
+  const [query, setQuery] = useState<string>("");
 
   useEffect(() => {
-    setProperties(propertyData as Property[]);
+    const loadedProperties = propertyData as Property[];
+    setProperties(loadedProperties);
   }, []);
 
   const handleSearch = (filters: {
@@ -35,11 +35,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     maxBudget: string;
   }) => {
     const searchParams = new URLSearchParams();
-    if (filters.location) searchParams.append('location', filters.location);
-    if (filters.propertyType) searchParams.append('propertyType', filters.propertyType);
-    if (filters.bhk) searchParams.append('bhk', filters.bhk);
-    if (filters.minBudget) searchParams.append('minBudget', filters.minBudget);
-    if (filters.maxBudget) searchParams.append('maxBudget', filters.maxBudget);
+    if (filters.location) searchParams.append("location", filters.location);
+    if (filters.propertyType) searchParams.append("propertyType", filters.propertyType);
+    if (filters.bhk) searchParams.append("bhk", filters.bhk);
+    if (filters.minBudget) searchParams.append("minBudget", filters.minBudget);
+    if (filters.maxBudget) searchParams.append("maxBudget", filters.maxBudget);
 
     navigate(`/results?${searchParams.toString()}`);
   };
@@ -50,12 +50,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
   };
 
-  const isResultsPage = location.pathname.startsWith("/results");
+  // 🔍 Only show sticky SearchBar if not on /results route
+  // const isResultsPage = location.pathname === "/results";
+  const isResultsPage = location.pathname === "/results" || location.pathname === "/results-sidebar";
+
 
   return (
     <UserProvider>
       <div className="flex flex-col min-h-screen">
         <Header />
+
         {!isResultsPage && (
           <div className="sticky top-16 z-40 bg-white shadow">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -69,8 +73,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
         )}
+
         <main className="flex-1">{children}</main>
         <Footer />
+
         {modalContext && (
           <>
             <LoginModal
