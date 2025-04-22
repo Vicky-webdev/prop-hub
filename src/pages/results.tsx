@@ -55,7 +55,7 @@ const ResultsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
+    <div  className="px-4 sm:px-6 lg:px-8">
       <h2 className="text-2xl font-bold mb-6">Search Results</h2>
 
       {/* 🔍 Filter Bar */}
@@ -118,7 +118,7 @@ const ResultsPage: React.FC = () => {
       ) : (
         <p className="text-red-500 mt-6">No properties found matching your criteria.</p>
       )}
-    </div>
+    </div> 
   );
 };
 

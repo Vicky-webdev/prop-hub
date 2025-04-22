@@ -74,7 +74,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         )}
 
-        <main className="flex-1">{children}</main>
+<main className={`flex-1 ${isResultsPage ? 'flex' : ''}`}>
+  {children}
+</main>
         <Footer />
 
         {modalContext && (

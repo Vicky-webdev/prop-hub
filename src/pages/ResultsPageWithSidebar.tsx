@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import FilterSidebar from "../components/SideBarFilter/FilterSidebar";
 import propertyData from "../data/mockProperties.json";
 import { Property } from "../types/types";
-import FilterSidebar from "../components/SideBarFilter/FilterSidebar";
+import { ArrowLeft } from "lucide-react";
+import Button from "../components/ui/Button";
+import FilterInput from "../components/SearchFilterBar/FilterInput";
+import BHKSelector from "../components/SearchFilterBar/BHKSelector";
+import BudgetRange from "../components/SearchFilterBar/BudgetRange";
 
-const ResultsPage: React.FC = () => {
+const ResultsPageWithSidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
@@ -38,18 +43,15 @@ const ResultsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const newParams = new URLSearchParams(location.search);
-  
     const updatedFilters = {
-      location: newParams.get("location")?.toLowerCase() || "",
-      type: newParams.get("propertyType")?.toLowerCase() || "",
-      bhk: newParams.get("bhk")?.toLowerCase() || "",
-      minBudget: newParams.get("minBudget") || "0",
-      maxBudget: newParams.get("maxBudget") || "100000000",
+      location: locationParam,
+      type: typeParam,
+      bhk: bhkParam,
+      minBudget: minBudgetParam.toString(),
+      maxBudget: maxBudgetParam.toString(),
     };
-  
     setFilters(updatedFilters);
-  
+
     const filtered = (propertyData as Property[]).filter((property) => {
       const matchesQuery = queryParam
         ? property.title.toLowerCase().includes(queryParam)
@@ -65,7 +67,7 @@ const ResultsPage: React.FC = () => {
         : true;
       const matchesMinBudget = property.budget >= parseInt(updatedFilters.minBudget);
       const matchesMaxBudget = property.budget <= parseInt(updatedFilters.maxBudget);
-  
+
       return (
         matchesQuery &&
         matchesLocation &&
@@ -75,51 +77,34 @@ const ResultsPage: React.FC = () => {
         matchesMaxBudget
       );
     });
-  
+
     setFilteredProperties(filtered);
   }, [location.search, queryParam]);
-  
-  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar visible only on large screens */}
-    {/* Sidebar for desktop */}
-  <aside className="hidden lg:block w-64 bg-gray-100 h-screen sticky top-16 shadow p-4">
-    <FilterSidebar filters={filters} onChange={handleFilterChange} />
-  </aside>
-       {/* Filter toggle button on mobile */}
-  <button
-    onClick={() => setShowMobileFilter(true)}
-    className="lg:hidden fixed top-20 left-4 z-50 bg-white border shadow px-4 py-2 rounded"
-  >
-    Filters
-  </button>
-
-  {/* Mobile Sidebar Overlay */}
-  {showMobileFilter && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-start">
-      <div className="bg-white w-64 h-full p-4 shadow-xl">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Filters</h3>
-          <button
-            onClick={() => setShowMobileFilter(false)}
-            className="text-gray-600 hover:text-black"
-          >
-            ✕
-          </button>
-        </div>
-        <FilterSidebar filters={filters} onChange={handleFilterChange} />
+      {/* Sidebar for Filters */}
+      <div className="w-64 bg-white shadow-md p-6 sticky top-16 z-40">
+        <h3 className="text-lg font-semibold mb-4">Filters</h3>
+        <FilterInput
+          value={filters.location}
+          onChange={(value) => handleFilterChange({ ...filters, location: value })}
+          suggestions={["Chennai", "Bangalore", "Delhi", "Mumbai"]}
+        />
+        <BHKSelector value={filters.bhk} onChange={(value) => handleFilterChange({ ...filters, bhk: value })} />
+        <BudgetRange
+          minValue={parseInt(filters.minBudget)}
+          maxValue={parseInt(filters.maxBudget)}
+          onChange={(minValue, maxValue) => handleFilterChange({ ...filters, minBudget: minValue.toString(), maxBudget: maxValue.toString() })}
+        />
       </div>
-    </div>
-  )}
 
-      {/* Main Content */}
-      <div className="flex-1 p-6">
+      {/* Main Content Area */}
+      <div className="flex-1 p-6 ml-64">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProperties.length > 0 ? (
             filteredProperties.map((property) => (
-              <div key={property.id} className="bg-white p-4 rounded-lg shadow">
+              <div key={property.id} className="bg-white p-4 rounded-lg shadow-md cursor-pointer" onClick={() => navigate(`/property/${property.id}`)}>
                 <img
                   src={property.image}
                   alt={property.title}
@@ -140,4 +125,4 @@ const ResultsPage: React.FC = () => {
   );
 };
 
-export default ResultsPage;
+export default ResultsPageWithSidebar;

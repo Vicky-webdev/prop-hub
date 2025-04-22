@@ -1,31 +1,38 @@
 import React from "react";
+import * as Slider from "@radix-ui/react-slider";
 
-interface Props {
-  min: string;
-  max: string;
-  onMinChange: (value: string) => void;
-  onMaxChange: (value: string) => void;
+interface AreaRangeProps {
+  minArea: string;
+  maxArea: string;
+  onAreaChange: (minArea: string, maxArea: string) => void;
 }
 
-const AreaRange: React.FC<Props> = ({ min, max, onMinChange, onMaxChange }) => {
+const AreaRange: React.FC<AreaRangeProps> = ({ minArea, maxArea, onAreaChange }) => {
+  const handleSliderChange = (values: number[]) => {
+    onAreaChange(values[0].toString(), values[1].toString());
+  };
+
   return (
-    <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium">Area (sq.ft)</label>
-      <div className="flex gap-2">
-        <input
-          type="number"
-          placeholder="Min"
-          className="w-1/2 border rounded-md px-3 py-2"
-          value={min}
-          onChange={(e) => onMinChange(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Max"
-          className="w-1/2 border rounded-md px-3 py-2"
-          value={max}
-          onChange={(e) => onMaxChange(e.target.value)}
-        />
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">Area Range</h3>
+      <Slider.Root
+        className="flex items-center w-full"
+        min={0}
+        max={5000}
+        step={1}
+        defaultValue={[parseInt(minArea), parseInt(maxArea)]}
+        onValueChange={handleSliderChange}
+      >
+        <Slider.Track className="relative flex-1 h-2 bg-gray-200 rounded-full">
+          <Slider.Range className="absolute bg-indigo-600 rounded-full h-2" />
+        </Slider.Track>
+        <Slider.Thumb className="block w-4 h-4 bg-indigo-600 rounded-full" />
+        <Slider.Thumb className="block w-4 h-4 bg-indigo-600 rounded-full" />
+      </Slider.Root>
+
+      <div className="flex justify-between text-sm text-gray-600">
+        <span>{minArea} sqft</span>
+        <span>{maxArea} sqft</span>
       </div>
     </div>
   );

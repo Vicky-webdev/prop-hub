@@ -1,53 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-interface Props {
-  label: string;
+interface FilterInputProps {
   value: string;
-  placeholder?: string;
   onChange: (value: string) => void;
+  suggestions: string[];
 }
 
-const dummyLocations = [
-  "Avadi", "Tambaram", "Kovilambakkam", "Guduvanchery", "Sholinganallur", "Pallikaranai"
-];
-
-const FilterInput: React.FC<Props> = ({ label, value, placeholder, onChange }) => {
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-
-  const handleChange = (val: string) => {
-    onChange(val);
-    if (val.length > 1) {
-      const filtered = dummyLocations.filter(loc =>
-        loc.toLowerCase().includes(val.toLowerCase())
+const FilterInput: React.FC<FilterInputProps> = ({ value, onChange, suggestions }) => {
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  
+  useEffect(() => {
+    if (value) {
+      setFilteredSuggestions(
+        suggestions.filter((suggestion) =>
+          suggestion.toLowerCase().includes(value.toLowerCase())
+        )
       );
-      setSuggestions(filtered);
     } else {
-      setSuggestions([]);
+      setFilteredSuggestions([]);
     }
-  };
+  }, [value, suggestions]);
 
   return (
-    <div className="relative">
-      <label className="text-sm font-medium block mb-1">{label}</label>
+    <div className="relative w-full">
       <input
         type="text"
-        className="w-full border rounded-md px-3 py-2"
-        placeholder={placeholder}
         value={value}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Search by Location"
+        className="w-full p-2 border rounded-md"
       />
-      {suggestions.length > 0 && (
-        <ul className="absolute z-10 bg-white border rounded w-full mt-1 max-h-40 overflow-auto shadow">
-          {suggestions.map((item) => (
+      {filteredSuggestions.length > 0 && (
+        <ul className="absolute top-full left-0 w-full bg-white border mt-2 max-h-48 overflow-y-auto shadow-md rounded-md z-10">
+          {filteredSuggestions.map((suggestion, index) => (
             <li
-              key={item}
-              className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                onChange(item);
-                setSuggestions([]);
-              }}
+              key={index}
+              className="p-2 cursor-pointer hover:bg-gray-100"
+              onClick={() => onChange(suggestion)}
             >
-              {item}
+              {suggestion}
             </li>
           ))}
         </ul>

@@ -13,6 +13,7 @@ import FlatsPage from './pages/buy/flats';
 import ResultsPage from './pages/results';
 import WishlistPage from './pages/WishlistPage';
 import SideBarResultsPage from './pages/ResultsPage';  // Import your new ResultsPage
+import ResultsPageWithSidebar from './pages/ResultsPageWithSidebar'; // Import your new ResultsPageWithSidebar
 
 function App() {
   return (
@@ -26,9 +27,13 @@ function App() {
         <Route path="/buy/villas" element={<VillasPage />} />
         <Route path="/buy/independent-homes" element={<IndependentHomesPage />} />
         <Route path="/buy/flats" element={<FlatsPage />} />
-        <Route path="/results" element={<ResultsPage />} /> {/* Old results page */}
         <Route path="/wishlist" element={<WishlistPage />} />
-        <Route path="/results-sidebar" element={<SideBarResultsPage />} /> {/* New route for the sidebar results page */}
+        {/* <Route path="/results" element={<SideBarResultsPage />} />  */}
+           {/* <- Make this default */}
+        <Route path="/results-sidebar" element={<ResultsPage />} />  {/* Optional backup/testing */} 
+        <Route path="/results" element={<ResultsPageWithSidebar />} /> {/* <- Result page have sidebar also */}
+
+
       </Routes>
 
       {/* Toasts will show up because this is now rendered */}

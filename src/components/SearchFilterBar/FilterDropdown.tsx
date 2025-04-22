@@ -1,25 +1,25 @@
 import React from "react";
 
-interface Props {
-  label: string;
-  value: string;
-  options: string[];
-  onChange: (value: string) => void;
+interface FilterDropdownProps {
+  selectedType: string;
+  onTypeChange: (value: string) => void;
+  label?: string;
 }
 
-const FilterDropdown: React.FC<Props> = ({ label, value, options, onChange }) => {
+const FilterDropdown: React.FC<FilterDropdownProps> = ({ selectedType, onTypeChange, label = "Property Type" }) => {
+  const propertyTypes = ["", "Apartment", "Villa", "Land / Plot", "Independent House"];
+
   return (
-    <div>
-      <label className="text-sm font-medium block mb-1">{label}</label>
+    <div className="w-full">
+      <label className="block text-sm font-medium mb-2">{label}</label>
       <select
-        className="w-full border rounded-md px-3 py-2"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={selectedType}
+        onChange={(e) => onTypeChange(e.target.value)}
+        className="w-full p-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option value="">Select {label}</option>
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
+        {propertyTypes.map((type, index) => (
+          <option key={index} value={type}>
+            {type || "Select Property Type"}
           </option>
         ))}
       </select>
