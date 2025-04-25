@@ -1,10 +1,9 @@
-// src/types.ts
 export interface Property {
   id: number;
   title: string;
   location: string;
   propertyType: string;
-  bhk?: string; // optional, can be undefined
+  bhk?: string;
   budget: number;
   area?: string;
   image: string;
@@ -17,4 +16,19 @@ export interface Property {
   parking: string;
   possession: string;
   amenities?: string[];
+  
 }
+
+export type Filters = {
+  bhk: string[];
+  propertyType: string[];
+  budget: {
+    min: number;
+    max: number;
+  };
+  area: {
+    min: number;
+    max: number;
+  };
+  location: string;
+};

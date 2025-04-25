@@ -1,39 +1,28 @@
 import React from "react";
-import * as Slider from "@radix-ui/react-slider";
 
-interface AreaRangeProps {
-  minArea: string;
-  maxArea: string;
-  onAreaChange: (minArea: string, maxArea: string) => void;
+export interface AreaRangeProps {
+  min: number;
+  max: number;
+  onChange: ({ min, max }: { min: number; max: number }) => void;
 }
 
-const AreaRange: React.FC<AreaRangeProps> = ({ minArea, maxArea, onAreaChange }) => {
-  const handleSliderChange = (values: number[]) => {
-    onAreaChange(values[0].toString(), values[1].toString());
-  };
-
+const AreaRange: React.FC<AreaRangeProps> = ({ min, max, onChange }) => {
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Area Range</h3>
-      <Slider.Root
-        className="flex items-center w-full"
-        min={0}
-        max={5000}
-        step={1}
-        defaultValue={[parseInt(minArea), parseInt(maxArea)]}
-        onValueChange={handleSliderChange}
-      >
-        <Slider.Track className="relative flex-1 h-2 bg-gray-200 rounded-full">
-          <Slider.Range className="absolute bg-indigo-600 rounded-full h-2" />
-        </Slider.Track>
-        <Slider.Thumb className="block w-4 h-4 bg-indigo-600 rounded-full" />
-        <Slider.Thumb className="block w-4 h-4 bg-indigo-600 rounded-full" />
-      </Slider.Root>
-
-      <div className="flex justify-between text-sm text-gray-600">
-        <span>{minArea} sqft</span>
-        <span>{maxArea} sqft</span>
-      </div>
+    <div className="flex gap-3">
+      <input
+        type="number"
+        value={min}
+        onChange={(e) => onChange({ min: Number(e.target.value), max })}
+        placeholder="Min Area (sqft)"
+        className="w-full border px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <input
+        type="number"
+        value={max}
+        onChange={(e) => onChange({ min, max: Number(e.target.value) })}
+        placeholder="Max Area (sqft)"
+        className="w-full border px-3 py-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
     </div>
   );
 };

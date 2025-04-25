@@ -74,7 +74,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         )}
 
-<main className={`flex-1 ${isResultsPage ? 'flex' : ''}`}>
+<main className={`flex-1 ${isResultsPage ? '' : ''}`}>
   {children}
 </main>
         <Footer />

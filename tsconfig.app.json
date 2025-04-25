@@ -7,7 +7,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -22,7 +21,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "baseUrl": "./", // Explicitly set baseUrl here
+    "paths": {
+      "@/*": ["./src/*"] // You might even try adding paths here as well, though it's usually in the root
+    }
   },
   "include": ["src"]
 }

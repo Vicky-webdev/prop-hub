@@ -12,8 +12,7 @@ import IndependentHomesPage from './pages/buy/independent-house';
 import FlatsPage from './pages/buy/flats';
 import ResultsPage from './pages/results';
 import WishlistPage from './pages/WishlistPage';
-import SideBarResultsPage from './pages/ResultsPage';  // Import your new ResultsPage
-import ResultsPageWithSidebar from './pages/ResultsPageWithSidebar'; // Import your new ResultsPageWithSidebar
+import ResultsPageWithSidebar from './pages/ResultsPageWithSidebar';
 
 function App() {
   return (
@@ -28,15 +27,10 @@ function App() {
         <Route path="/buy/independent-homes" element={<IndependentHomesPage />} />
         <Route path="/buy/flats" element={<FlatsPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />
-        {/* <Route path="/results" element={<SideBarResultsPage />} />  */}
-           {/* <- Make this default */}
-        <Route path="/results-sidebar" element={<ResultsPage />} />  {/* Optional backup/testing */} 
-        <Route path="/results" element={<ResultsPageWithSidebar />} /> {/* <- Result page have sidebar also */}
-
-
+        <Route path="/results" element={<ResultsPageWithSidebar />} />
+        <Route path="/results-sidebar" element={<ResultsPage />} />
       </Routes>
 
-      {/* Toasts will show up because this is now rendered */}
       <ToastContainer position="bottom-left" autoClose={3000} />
     </>
   );

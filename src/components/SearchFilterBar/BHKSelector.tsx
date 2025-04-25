@@ -1,46 +1,39 @@
-import React, { useState } from "react";
+// BHKSelector.tsx
+import React from "react";
 
-interface BHKSelectorProps {
-  value: string;
-  onChange: (value: string) => void;
+export interface BHKSelectorProps {
+  selectedBHK: string[];
+  onChange: (val: string[]) => void;
 }
 
-const BHKSelector: React.FC<BHKSelectorProps> = ({ value, onChange }) => {
-  const [quantity, setQuantity] = useState(parseInt(value));
+const bhkOptions = ["1 BHK", "2 BHK", "3 BHK", "4+ BHK"];
 
-  const handleIncrease = () => {
-    if (quantity < 10) setQuantity(quantity + 1); // Limit to 10 BHK for now
-  };
-
-  const handleDecrease = () => {
-    if (quantity > 0) setQuantity(quantity - 1);
-  };
-
-  const handleChange = () => {
-    onChange(quantity.toString());
+const BHKSelector: React.FC<BHKSelectorProps> = ({ selectedBHK, onChange }) => {
+  const toggleBHK = (bhk: string) => {
+    const newSelection = selectedBHK.includes(bhk)
+      ? selectedBHK.filter((b) => b !== bhk)
+      : [...selectedBHK, bhk];
+    onChange(newSelection);
   };
 
   return (
-    <div className="flex items-center space-x-4">
-      <button
-        onClick={handleDecrease}
-        className="bg-gray-200 p-2 rounded-lg"
-      >
-        -
-      </button>
-      <span>{quantity} BHK</span>
-      <button
-        onClick={handleIncrease}
-        className="bg-gray-200 p-2 rounded-lg"
-      >
-        +
-      </button>
-      <button
-        onClick={handleChange}
-        className="ml-4 p-2 bg-blue-500 text-white rounded-md"
-      >
-        Apply
-      </button>
+    <div className="flex flex-wrap gap-2">
+      {bhkOptions.map((bhk) => {
+        const selected = selectedBHK.includes(bhk);
+        return (
+          <button
+            key={bhk}
+            className={`px-3 py-1 rounded-full border text-sm transition ${
+              selected
+                ? "bg-blue-600 text-white border-blue-600"
+                : "bg-white text-gray-700 border-gray-300 hover:border-blue-400"
+            }`}
+            onClick={() => toggleBHK(bhk)}
+          >
+            {selected ? "✓" : "+"} {bhk}
+          </button>
+        );
+      })}
     </div>
   );
 };

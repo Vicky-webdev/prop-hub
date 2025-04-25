@@ -1,98 +1,46 @@
-import React from "react";
+// src/components/SidebarFilter.tsx
+import React, { useMemo } from "react";
+import { Filters } from "../types";
+import BHKSelector from "./filters/BHKSelector";
+import PropertyTypeSelector from "./filters/PropertyTypeSelector";
+import BudgetRange from "./filters/BudgetRange";
+import AreaRange from "./filters/AreaRange";
+import LocationAutoSuggest from "./filters/LocationAutoSuggest";
 
-interface Filters {
-  location: string;
-  type: string;
-  bhk: string;
-  minBudget: string;
-  maxBudget: string;
-}
-
-interface SidebarFilterProps {
+type SidebarFilterProps = {
   filters: Filters;
-  onChange: (newFilters: Filters) => void;
-}
+  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+};
 
-const SidebarFilter: React.FC<SidebarFilterProps> = ({ filters, onChange }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    onChange({
-      ...filters,
-      [name]: value, 
+const SidebarFilter: React.FC<SidebarFilterProps> = ({ filters, setFilters }) => {
+  const handleClearAll = () => {
+    setFilters({
+      propertyTypes: [],
+      bhk: [],
+      budget: [0, 99999999],
+      area: [0, 99999],
+      location: ""
     });
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 shadow-lg p-4 rounded-lg">
-      <h3 className="font-semibold text-lg">Filters</h3>
-
-      {/* Location Filter */}
-      <div className="mt-4">
-        <label className="block text-sm font-medium">Location</label>
-        <input
-          type="text"
-          name="location"
-          value={filters.location}
-          onChange={handleChange}
-          className="mt-1 p-2 w-full border rounded"
-          placeholder="Enter location"
-        />
+    <div className="space-y-6">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-semibold">Filters</h3>
+        <button onClick={handleClearAll} className="text-sm text-blue-600 hover:underline">
+          Clear All
+        </button>
       </div>
 
-      {/* Property Type Filter */}
-      <div className="mt-4">
-        <label className="block text-sm font-medium">Property Type</label>
-        <select
-          name="type"
-          value={filters.type}
-          onChange={handleChange}
-          className="mt-1 p-2 w-full border rounded"
-        >
-          <option value="">Select Type</option>
-          <option value="villa">Villa</option>
-          <option value="land / plot">Land / Plot</option>
-          <option value="apartment">Apartment</option>
-        </select>
-      </div>
+      <PropertyTypeSelector selected={filters.propertyTypes} onChange={(val) => setFilters(f => ({ ...f, propertyTypes: val }))} />
 
-      {/* BHK Filter */}
-      <div className="mt-4">
-        <label className="block text-sm font-medium">BHK</label>
-        <input
-          type="text"
-          name="bhk"
-          value={filters.bhk}
-          onChange={handleChange}
-          className="mt-1 p-2 w-full border rounded"
-          placeholder="e.g., 2, 3"
-        />
-      </div>
+      <BHKSelector selected={filters.bhk} onChange={(val) => setFilters(f => ({ ...f, bhk: val }))} />
 
-      {/* Min Budget Filter */}
-      <div className="mt-4">
-        <label className="block text-sm font-medium">Min Budget</label>
-        <input
-          type="number"
-          name="minBudget"
-          value={filters.minBudget}
-          onChange={handleChange}
-          className="mt-1 p-2 w-full border rounded"
-          placeholder="Enter min budget"
-        />
-      </div>
+      <BudgetRange value={filters.budget} onChange={(val) => setFilters(f => ({ ...f, budget: val }))} />
 
-      {/* Max Budget Filter */}
-      <div className="mt-4">
-        <label className="block text-sm font-medium">Max Budget</label>
-        <input
-          type="number"
-          name="maxBudget"
-          value={filters.maxBudget}
-          onChange={handleChange}
-          className="mt-1 p-2 w-full border rounded"
-          placeholder="Enter max budget"
-        />
-      </div>
+      <AreaRange value={filters.area} onChange={(val) => setFilters(f => ({ ...f, area: val }))} />
+
+      <LocationAutoSuggest selected={filters.location} onChange={(val) => setFilters(f => ({ ...f, location: val }))} />
     </div>
   );
 };

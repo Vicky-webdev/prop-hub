@@ -3,5 +3,15 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "strict": true,
+    "noImplicitAny": true,
+    "paths": {
+      "@/*": ["src/*"]
+    }
+    // You might have other shared compiler options here
+  }
+  // You might have "include" or "exclude" here for your main app code
 }
